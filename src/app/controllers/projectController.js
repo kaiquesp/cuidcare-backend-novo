@@ -1,7 +1,7 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 
-const Project = require('../models/project');
+const Professional = require('../models/project');
 const Task = require('../models/task');
 
 const router = express.Router();
@@ -10,82 +10,79 @@ router.use(authMiddleware);
 
 router.get('/', async (req, res) => {
   try {
-    const projects = await Project.find().populate(['user', 'tasks']);
+    const professionals = await Professional.find().populate('user');
 
-    return res.send({ projects });
+    return res.send({ professionals });
   } catch (err) {
-    return res.status(400).send({ error: 'Error loading projects' });
+    return res.status(400).send({ error: 'Error loading professionals' });
   }
 });
 
-router.get('/:projectId', async (req, res) => {
+router.get('/:professionalId', async (req, res) => {
   try {
-    const project = await Project.findById(req.params.projectId).populate(['user', 'tasks']);
+    const professional = await Professional.findById(req.params.professionalId).populate('user');
 
-    return res.send({ project });
+    return res.send({ professional });
   } catch (err) {
-    return res.status(400).send({ error: 'Error loading project' });
+    return res.status(400).send({ error: 'Error loading professional' });
   }
 });
 
 router.post('/', async (req, res) => {
   try {
-    const { title, description, tasks } = req.body;
+    // const { title, description, tasks } = req.body;
 
-    const project = await Project.create({ title, description, user: req.userId });
+    const professional = await Professional.create({ ...req.body, user: req.userId });
 
-    await Promise.all(tasks.map(async task => {
-      const projectTask = new Task({ ...task, project: project._id });
+    // await Promise.all(tasks.map(async task => {
+    //   const projectTask = new Task({ ...task, project: project._id });
 
-      await projectTask.save();
+    //   await projectTask.save();
 
-      project.tasks.push(projectTask);
-    }));
+    //   project.tasks.push(projectTask);
+    // }));
 
-    await project.save();
+    await professional.save();
 
-    return res.send({ project });
+    return res.send({ professional });
   } catch (err) {
-    return res.status(400).send({ error: 'Error creating new project' });
+    return res.status(400).send({ error: 'Error creating new professional' });
   }
 });
 
-router.put('/:projectId', async (req, res) => {
+router.put('/:professionalId', async (req, res) => {
   try {
-    const { title, description, tasks } = req.body;
+    // const { title, description, tasks } = req.body;
 
-    const project = await Project.findByIdAndUpdate(req.params.projectId, {
-      title,
-      description
-    }, { new: true });
+    const professional = await Professional.findByIdAndUpdate(req.params.professionalId, req.body, { new: true });
 
-    project.tasks = [];
-    await Task.remove({ project: project._id });
+    // project.tasks = [];
+    // await Task.remove({ project: project._id });
 
-    await Promise.all(tasks.map(async task => {
-      const projectTask = new Task({ ...task, project: project._id });
+    // await Promise.all(tasks.map(async task => {
+    //   const projectTask = new Task({ ...task, project: project._id });
 
-      await projectTask.save();
+    //   await projectTask.save();
 
-      project.tasks.push(projectTask);
-    }));
+    //   project.tasks.push(projectTask);
+    // }));
 
-    await project.save();
+    await professional.save();
 
-    return res.send({ project });
+    return res.send({ professional });
   } catch (err) {
-    return res.status(400).send({ error: 'Error updating project' });
+    return res.status(400).send({ error: 'Error updating professional' });
   }
 });
 
-router.delete('/:projectId', async (req, res) => {
+router.delete('/:professionalId', async (req, res) => {
   try {
-    await Project.findByIdAndRemove(req.params.projectId);
+    await Professional.findByIdAndRemove(req.params.professionalId);
 
     return res.send();
   } catch (err) {
-    return res.status(400).send({ error: 'Error deleting project' });
+    return res.status(400).send({ error: 'Error deleting professional' });
   }
 });
 
-module.exports = app => app.use('/projects', router);
+module.exports = app => app.use('/professional', router);
