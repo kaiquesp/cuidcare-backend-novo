@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 var Schema = mongoose.Schema;
 
-const ProjectSchema = new mongoose.Schema({
+const ProfessionalSchema = new mongoose.Schema({
   nome: {type: String, required: true},
 	email: {type: String, required: true},
 	dataNascimento: {type: String, required: true},
@@ -33,6 +33,6 @@ const ProjectSchema = new mongoose.Schema({
 	user: { type: Schema.Types.ObjectId, ref: "User", required: true }
 });
 
-const Project = mongoose.model('Project', ProjectSchema);
+const Professional = mongoose.model('Professional', ProfessionalSchema);
 
-module.exports = Project;
+module.exports = Professional;
