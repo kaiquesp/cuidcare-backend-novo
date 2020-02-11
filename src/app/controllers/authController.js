@@ -17,11 +17,14 @@ function generateToken(params = {}) {
 }
 
 router.post('/register', async (req, res) => {
-  const { email } = req.body;
+  const { email, celular } = req.body;
 
   try {
     if (await User.findOne({ email }))
-      return res.status(400).send({ error: 'User already exists' });
+      return res.status(400).send({ error: 'E-mail já cadastrado' });
+
+    if (await User.findOne({ cpf }))
+      return res.status(400).send({ error: 'CPF já cadastrado' });
 
     const user = await User.create(req.body);
 
