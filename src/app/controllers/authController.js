@@ -28,12 +28,29 @@ router.post('/register', async (req, res) => {
 
     const user = await User.create(req.body);
 
+    mailer.sendMail({
+      to: email,
+      from: 'contato@kaique.provisorio.ws',
+      template: 'register/register',
+      context: { token },
+    }, (err) => {
+      if (err)
+        return res.status(400).send({ error: 'Cannot send forgot password email' });
+
+      return res.send();
+    })
+  } catch (err) {
+    res.status(400).send({ error: 'Error on forgot password, try again' });
+  }
+
     user.password = undefined;
+    
 
     return res.send({
       user,
       token: generateToken({ id: user.id }),
     });
+    
   } catch (err) {
     return res.status(400).send({ error: 'Registration failed' });
   }
