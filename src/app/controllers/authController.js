@@ -117,8 +117,7 @@ router.post('/forgot_password', async (req, res) => {
       subject: 'Message',
       text: 'I hope this message gets delivered!'
     }, (err, info) => {
-      console.log(info.envelope);
-      console.log(info.messageId);
+      console.log(info);
     });
   } catch (err) {
     res.status(400).send({ error: 'Error on forgot password, try again' });
