@@ -94,18 +94,6 @@ router.post('/forgot_password', async (req, res) => {
       }
     });
 
-    // mailer.sendMail({
-    //   to: email,
-    //   from: 'diego@rocketseat.com.br',
-    //   template: 'auth/forgot_password',
-    //   context: { token },
-    // }, (err) => {
-    //   if (err)
-    //     return res.status(400).send({ error: 'Cannot send forgot password email' });
-
-    //   return res.send();
-    // })
-
     const transporter = nodemailer.createTransport({
       host: "email-ssl.com.br",
       port: 465,
@@ -129,6 +117,9 @@ router.post('/forgot_password', async (req, res) => {
         console.log(error);
       } else {
         console.log('Email enviado: ' + info.response);
+        return res.status(200).send({
+          message: 'Mensagem enviada com sucesso'
+        })
       }
     });
 
