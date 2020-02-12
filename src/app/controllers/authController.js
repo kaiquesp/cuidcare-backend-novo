@@ -39,9 +39,6 @@ router.post('/register', async (req, res) => {
 
       return res.send();
     })
-  } catch (err) {
-    res.status(400).send({ error: 'Error on forgot password, try again' });
-  }
 
     user.password = undefined;
     
