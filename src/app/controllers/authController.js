@@ -121,7 +121,7 @@ router.post('/forgot_password', async (req, res) => {
       from: 'contato@kaique.provisorio.ws',
       to: 'kaiqueexp@gmail.com',
       subject: 'E-mail enviado usando Node!',
-      html : { path: 'app/resources/mail/auth/forgot_password.html' }
+      html : { path: 'src/app/resources/mail/auth/forgot_password.html' }
     };
 
     transporter.sendMail(mailOptions, function(error, info){
