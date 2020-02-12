@@ -63,6 +63,8 @@ router.post('/register', async (req, res) => {
 
     user.password = undefined;
 
+    const confirmationCode = Math.ceil(Math.random() * Math.pow(10,7));
+
     const mailOptions = {
       from: '"Kaique" <contato@kaique.provisorio.ws>',
       to: email,
