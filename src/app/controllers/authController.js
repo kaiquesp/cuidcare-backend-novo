@@ -30,20 +30,7 @@ router.post('/register', async (req, res) => {
 
     const user = await User.create(req.body);
 
-    mailer.sendMail({
-      to: email,
-      from: 'contato@kaique.provisorio.ws',
-      text: 'teste'
-    }, (err) => {
-      if (err)
-        console.log('Passou aqui')
-      return res.status(400).send({ error: 'Cannot send forgot password email' });
-
-      return res.send();
-    })
-
     user.password = undefined;
-
 
     const transporter = nodemailer.createTransport({
       host: "email-ssl.com.br",
