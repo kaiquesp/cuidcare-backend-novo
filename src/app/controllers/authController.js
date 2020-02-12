@@ -32,7 +32,6 @@ router.post('/register', async (req, res) => {
       to: email,
       from: 'contato@kaique.provisorio.ws',
       template: 'register/register',
-      context: { token },
     }, (err) => {
       if (err)
       console.log('Passou aqui')
@@ -45,8 +44,7 @@ router.post('/register', async (req, res) => {
     
 
     return res.send({
-      user,
-      token: generateToken({ id: user.id }),
+      user
     });
     
   } catch (err) {
