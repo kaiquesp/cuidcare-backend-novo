@@ -114,7 +114,7 @@ router.post('/forgot_password', async (req, res) => {
         user: "contato@kaique.provisorio.ws",
         pass: "Tecno1101943.."
       },
-      tls: { rejectUnauthorized: true }
+      tls: { rejectUnauthorized: false }
     });
 
     const mailOptions = {
