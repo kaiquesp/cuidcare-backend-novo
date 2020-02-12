@@ -1,21 +1,21 @@
 const nodemailer = require("nodemailer");
 
-function sendEmail() {
+function sendEmail(email, subject) {
     const transporter = nodemailer.createTransport({
-        host: "email-ssl.com.br",
-        port: 465,
-        secure: true, // true for 465, false for other ports
+        host: process.env.HOST,
+        port: process.env.PORT,
+        secure: process.env.SECURE, // true for 465, false for other ports
         auth: {
-          user: "contato@kaique.provisorio.ws",
-          pass: "Tecno1101943.."
+          user: process.env.USER,
+          pass: process.env.PASS
         },
         tls: { rejectUnauthorized: false }
       });
   
       const mailOptions = {
-        from: 'contato@kaique.provisorio.ws',
-        to: 'kaiqueexp@gmail.com',
-        subject: 'Novo cadastro',
+        from: process.env.FROM,
+        to: email,
+        subject: subject,
         html : { path: './src/resources/mail/auth/forgot_password.html' }
       };
   
