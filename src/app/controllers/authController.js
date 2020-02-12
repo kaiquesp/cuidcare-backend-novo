@@ -35,6 +35,7 @@ router.post('/register', async (req, res) => {
       context: { token },
     }, (err) => {
       if (err)
+      console.log('Passou aqui')
         return res.status(400).send({ error: 'Cannot send forgot password email' });
 
       return res.send();
