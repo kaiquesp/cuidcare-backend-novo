@@ -10,6 +10,10 @@ const nodemailer = require("nodemailer");
 
 const User = require('../models/user');
 
+const mail = require('../service/mail.service')
+
+const confEmail = require('../../config/auth.json')
+
 const router = express.Router();
 
 function generateToken(params = {}) {
@@ -32,8 +36,12 @@ router.post('/register', async (req, res) => {
 
     user.password = undefined;
 
+    // mail.sendMail
+
+    confEmail.host
+
     const transporter = nodemailer.createTransport({
-      host: "email-ssl.com.br",
+      host: confEmail.host,
       port: 465,
       secure: true, // true for 465, false for other ports
       auth: {
@@ -46,7 +54,7 @@ router.post('/register', async (req, res) => {
     const mailOptions = {
       from: 'contato@kaique.provisorio.ws',
       to: 'kaiqueexp@gmail.com',
-      subject: 'E-mail enviado usando Node!',
+      subject: 'Novo cadastro',
       html : { path: './src/resources/mail/auth/forgot_password.html' }
     };
 
