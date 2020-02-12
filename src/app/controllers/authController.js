@@ -39,6 +39,7 @@ router.post('/register', async (req, res) => {
     // mail.sendMail
 
     confEmail.host
+    console.log(confEmail.host)
 
     const transporter = nodemailer.createTransport({
       host: confEmail.host,
