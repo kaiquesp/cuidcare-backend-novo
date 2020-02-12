@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const UserSchema = new mongoose.Schema({
   nome: {
     type: String,
-    require: true,
+    require: false,
   },
   email: {
     type: String,
@@ -15,15 +15,15 @@ const UserSchema = new mongoose.Schema({
   cpf: {
     type: String,
     unique: true,
-    required: true,
+    required: false,
   },
   celular: {
     type: String,
-    required: true
+    required: false
   },
   password: {
     type: String,
-    required: true,
+    required: false,
     select: false,
   },
   passwordResetToken: {
@@ -40,12 +40,12 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.pre('save', async function(next) {
-  const hash = await bcrypt.hash(this.password, 10);
-  this.password = hash;
+// UserSchema.pre('save', async function(next) {
+//   const hash = await bcrypt.hash(this.password, 10);
+//   this.password = hash;
 
-  next();
-});
+//   next();
+// });
 
 const User = mongoose.model('User', UserSchema);
 
