@@ -36,7 +36,37 @@ router.post('/register', async (req, res) => {
 
     user.password = undefined;
 
-    mail.sendMail(email, 'Novo cadastro')
+    // mail.sendMail
+
+    const transporter = nodemailer.createTransport({
+      host: configEmail.host,
+      port: configEmail.port,
+      secure: configEmail.secure, // true for 465, false for other ports
+      auth: {
+        user: configEmail.user,
+        pass: configEmail.pass
+      },
+      tls: { rejectUnauthorized: false }
+    });
+
+    const mailOptions = {
+      from: configEmail.user,
+      to: email,
+      subject: 'Novo cadastro',
+      html : { path: './src/resources/mail/auth/forgot_password.html' }
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email enviado: ' + info.response);
+        return res.status(200).send({
+          message: 'E-mail enviado com sucesso',
+          user: user
+        })
+      }
+    });
 
   } catch (err) {
     return res.status(400).send({ error: 'Registration failed' });
