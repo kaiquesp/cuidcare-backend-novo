@@ -6,6 +6,8 @@ const mailer = require('../../modules/mailer');
 
 const authConfig = require('../../config/auth');
 
+const nodemailer = require("nodemailer");
+
 const User = require('../models/user');
 
 const router = express.Router();
@@ -31,22 +33,22 @@ router.post('/register', async (req, res) => {
     mailer.sendMail({
       to: email,
       from: 'contato@kaique.provisorio.ws',
-      template: 'register/register',
+      text: 'teste'
     }, (err) => {
       if (err)
-      console.log('Passou aqui')
-        return res.status(400).send({ error: 'Cannot send forgot password email' });
+        console.log('Passou aqui')
+      return res.status(400).send({ error: 'Cannot send forgot password email' });
 
       return res.send();
     })
 
     user.password = undefined;
-    
+
 
     return res.send({
       user
     });
-    
+
   } catch (err) {
     return res.status(400).send({ error: 'Registration failed' });
   }
@@ -92,17 +94,32 @@ router.post('/forgot_password', async (req, res) => {
       }
     });
 
-    mailer.sendMail({
-      to: email,
-      from: 'diego@rocketseat.com.br',
-      template: 'auth/forgot_password',
-      context: { token },
-    }, (err) => {
-      if (err)
-        return res.status(400).send({ error: 'Cannot send forgot password email' });
+    // mailer.sendMail({
+    //   to: email,
+    //   from: 'diego@rocketseat.com.br',
+    //   template: 'auth/forgot_password',
+    //   context: { token },
+    // }, (err) => {
+    //   if (err)
+    //     return res.status(400).send({ error: 'Cannot send forgot password email' });
 
-      return res.send();
-    })
+    //   return res.send();
+    // })
+
+    let transporter = nodemailer.createTransport({
+      sendmail: true,
+      newline: 'unix',
+      path: '/src/app/resources/mail/auth/forgot_password'
+    });
+    transporter.sendMail({
+      from: 'sender@example.com',
+      to: 'recipient@example.com',
+      subject: 'Message',
+      text: 'I hope this message gets delivered!'
+    }, (err, info) => {
+      console.log(info.envelope);
+      console.log(info.messageId);
+    });
   } catch (err) {
     res.status(400).send({ error: 'Error on forgot password, try again' });
   }
