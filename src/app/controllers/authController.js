@@ -2,18 +2,10 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const mailer = require('../../modules/mailer');
-
 const authConfig = require('../../config/auth');
-
 const nodemailer = require("nodemailer");
-
 const User = require('../models/user');
-
-const mail = require('../service/mail.service')
-
-const configEmail = require('../../config/mail.json')
-
+const Mail = require('../services/Mail')
 const router = express.Router();
 
 function generateToken(params = {}) {
@@ -26,45 +18,64 @@ router.post('/register', async (req, res) => {
   const { email, cpf } = req.body;
 
   try {
-    if (await User.findOne({ email }))
+    if (await User.findOne({ email })){ 
       return res.status(400).send({ error: 'E-mail já cadastrado' });
+    }else if(email.length === 0){
+      return res.status(400).send({
+        error: 'E-mail não pode estar vazio'
+      })
+      return;
+    }
 
-    if (await User.findOne({ cpf }))
+    if (req.body.nome.length === 0){
+      return res.status(400).send({
+        error: 'Nome não pode estar vazio'
+      })
+      return;
+    }
+
+    if (await User.findOne({ cpf })){ 
       return res.status(400).send({ error: 'CPF já cadastrado' });
+    }else if(cpf.length === 0) {
+      return res.status(400).send({
+        error: 'CPF não pode estar vazio'
+      })
+      return;
+    }
+
+    if (req.body.celular.length === 0){
+      return res.status(400).send({
+        error: 'Celular não pode estar vazio'
+      })
+
+      return;
+    }
+
+    if (req.body.password.length === 0){
+      return res.status(400).send({
+        error: 'Senha não pode estar vazio'
+      })
+
+      return;
+    }
 
     const user = await User.create(req.body);
 
     user.password = undefined;
 
-    // mail.sendMail
-
-    const transporter = nodemailer.createTransport({
-      host: configEmail.host,
-      port: configEmail.port,
-      secure: configEmail.secure, // true for 465, false for other ports
-      auth: {
-        user: configEmail.user,
-        pass: configEmail.pass
-      },
-      tls: { rejectUnauthorized: false }
-    });
-
     const mailOptions = {
-      from: configEmail.user,
+      from: '"Kaique" <contato@kaique.provisorio.ws>',
       to: email,
-      subject: 'Novo cadastro',
-      html : { path: './src/resources/mail/auth/forgot_password.html' }
+      subject: `Confirmação de cadastro`,
+      template: 'register',
+      context: { email: email, code: confirmationCode }
     };
-
-    transporter.sendMail(mailOptions, function(error, info){
+  
+    Mail.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
       } else {
         console.log('Email enviado: ' + info.response);
-        return res.status(200).send({
-          message: 'E-mail enviado com sucesso',
-          user: user
-        })
       }
     });
 
@@ -72,6 +83,26 @@ router.post('/register', async (req, res) => {
     return res.status(400).send({ error: 'Registration failed' });
   }
 });
+
+router.post('/activate-account', async (req, res) => {
+  const { email, confirmationCode } = req.body;
+
+  const user = await User.findOne({email, confirmationCode})
+  console.log(user)
+
+  if (user){
+    user.confirmationCode = '';
+    user.status = true
+    const userUpdate = await User.findByIdAndUpdate(user.id, user, { new: true });
+    return res.status(200).send({
+      user: userUpdate
+    })
+  }else{
+    return res.status(404).send({
+      error: 'Falha ao ativar conta, verifique se digitou o código e email corretos'
+    })
+  }
+})
 
 router.post('/authenticate', async (req, res) => {
   const { email, password } = req.body;
@@ -128,10 +159,10 @@ router.post('/forgot_password', async (req, res) => {
       from: 'contato@kaique.provisorio.ws',
       to: 'kaiqueexp@gmail.com',
       subject: 'E-mail enviado usando Node!',
-      html : { path: './src/resources/mail/auth/forgot_password.html' }
+      html: { path: './src/resources/mail/auth/forgot_password.html' }
     };
 
-    transporter.sendMail(mailOptions, function(error, info){
+    transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
       } else {

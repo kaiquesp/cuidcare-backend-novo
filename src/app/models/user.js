@@ -26,6 +26,20 @@ const UserSchema = new mongoose.Schema({
     required: false,
     select: false,
   },
+  isProfessional: {
+    type: Boolean,
+    required: false,
+    select: false,
+  },
+  status: {
+    type: Boolean,
+    required: false,
+    select: false,
+  },
+  confirmationCode: {
+    type: String,
+    require: false
+  },
   passwordResetToken: {
     type: String,
     select: false,
@@ -40,12 +54,14 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-// UserSchema.pre('save', async function(next) {
-//   const hash = await bcrypt.hash(this.password, 10);
-//   this.password = hash;
+UserSchema.pre('save', async function(next) {
+  const hash = await bcrypt.hash(this.password, 10);
+  this.password = hash;
 
-//   next();
-// });
+  this.confirmationCode = Math.ceil(Math.random() * Math.pow(10,7));
+
+  next();
+});
 
 const User = mongoose.model('User', UserSchema);
 
