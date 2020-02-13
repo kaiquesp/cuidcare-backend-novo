@@ -63,14 +63,14 @@ router.post('/register', async (req, res) => {
 
     user.password = undefined;
 
-    const confirmationCode = Math.ceil(Math.random() * Math.pow(10,7));
+    const userConfir = await User.findOne({email})
 
     const mailOptions = {
       from: '"Kaique" <contato@kaique.provisorio.ws>',
       to: email,
       subject: `Confirmação de cadastro`,
       template: 'register',
-      context: { email: email, code: confirmationCode }
+      context: { email: email, code: userConfir.confirmationCode }
     };
   
     Mail.sendMail(mailOptions, function (error, info) {
@@ -87,9 +87,9 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/activate-account', async (req, res) => {
-  const { email, confirmationCode } = req.body;
+  const { confirmationCode } = req.body;
 
-  const user = await User.findOne({email, confirmationCode})
+  const user = await User.findOne({confirmationCode})
   console.log(user)
 
   if (user){

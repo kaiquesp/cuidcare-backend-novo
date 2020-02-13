@@ -58,10 +58,23 @@ UserSchema.pre('save', async function(next) {
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
 
-  this.confirmationCode = Math.ceil(Math.random() * Math.pow(10,7));
+  const hashGerada = makeid();
+  const hashCriptograda = await bcrypt.hash(hashGerada, 10);
+
+  this.confirmationCode = hashCriptograda;
 
   next();
 });
+
+function makeid() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 30; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
 
 const User = mongoose.model('User', UserSchema);
 
