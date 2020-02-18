@@ -64,10 +64,6 @@ router.post('/register',[
     //   return;
     // }
 
-    body('email').then(foi => {
-      console.log(foi)
-    })
-
     check('email').custom(value => {
       return User.findOne(value).then(user => {
         if (user) {
