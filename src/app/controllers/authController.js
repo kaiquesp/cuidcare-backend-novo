@@ -88,8 +88,16 @@ router.post('/register',[
   
     Mail.sendMail(mailOptions, function (error, info) {
       if (error) {
+        return res.status(400).send({
+          error: 'Falha no cadastro do profissional',
+          status: 400
+        })
         console.log(error);
       } else {
+        return res.status(200).send({
+          message: 'Cadastro realizado com sucesso',
+          status: 200
+        })
         console.log('Email enviado: ' + info.response);
       }
     });
