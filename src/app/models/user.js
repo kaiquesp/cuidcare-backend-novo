@@ -26,15 +26,13 @@ const UserSchema = new mongoose.Schema({
     required: false,
     select: false,
   },
-  isProfessional: {
-    type: Boolean,
-    required: false,
-    select: false,
+  privileges: {
+    type: String,
+    required: false
   },
   status: {
     type: Boolean,
-    required: false,
-    select: false,
+    required: false
   },
   confirmationCode: {
     type: String,
@@ -58,8 +56,7 @@ UserSchema.pre('save', async function(next) {
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
 
-  const hashGerada = makeid();
-  const hashCriptograda = await bcrypt.hash(hashGerada, 10);
+  const hashCriptograda = makeid()
 
   this.confirmationCode = hashCriptograda;
 
@@ -70,7 +67,7 @@ function makeid() {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (var i = 0; i < 30; i++)
+  for (var i = 0; i < 50; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text;
