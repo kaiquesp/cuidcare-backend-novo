@@ -31,6 +31,13 @@ router.post('/', async (req, res) => {
   try {
     // const { title, description, tasks } = req.body;
 
+    let avatar = req.files.foto;
+
+    //Use the mv() method to place the file in upload directory (i.e. "uploads")
+    avatar.mv('./uploads/professional/' + avatar.name);
+
+    req.body.foto = avatar.name
+
     const professional = await Professional.create({ ...req.body, user: req.userId });
 
     // await Promise.all(tasks.map(async task => {
@@ -40,6 +47,8 @@ router.post('/', async (req, res) => {
 
     //   project.tasks.push(projectTask);
     // }));
+
+    
 
     await professional.save();
 
