@@ -28,7 +28,7 @@ const ProfessionalSchema = new mongoose.Schema({
 	numero: {type: String, required: false},
 	estado: {type: String, required: false},
 	pais: {type: String, required: false},
-	foto: {type: String, required: false},
+	foto: {type: Object, required: false},
 	update_at: {type: Date, required: false},
 	createdAt: {type: Date, required: false},
 	email: {type: String, required: false},
