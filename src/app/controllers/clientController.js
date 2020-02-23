@@ -2,10 +2,17 @@ const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 
 const Client = require('../models/client');
+const multipart = require('connect-multiparty');
 
 const router = express.Router();
 
 router.use(authMiddleware);
+
+router.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 router.get('/', async (req, res) => {
   try {
@@ -54,6 +61,13 @@ router.post('/', async (req, res) => {
   } catch (err) {
     return res.status(400).send({ error: 'Error creating new client' });
   }
+});
+
+const multipartMiddleware = multipart({ uploadDir: './uploads' });
+router.post('/upload', multipartMiddleware, (req, res) => {
+  const files = req.files;
+  console.log(files);
+  res.json({ message: files });
 });
 
 router.put('/:clientId', async (req, res) => {

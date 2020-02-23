@@ -14,12 +14,14 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
+    "connect-multiparty": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^4.16.2",
     "express-fileupload": "^1.1.6",
     "express-validator": "^6.4.0",
     "fs": "0.0.1-security",
     "hbs": "^4.1.0",
+    "i": "^0.3.6",
     "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.15",
     "mongoose": "^4.13.4",
@@ -28,6 +30,7 @@
     "nodemailer-express-handlebars": "^2.0.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nodemon": "^2.0.2",
+    "npm": "^6.13.7",
     "path": "^0.12.7"
   }
 }

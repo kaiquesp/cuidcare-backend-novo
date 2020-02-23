@@ -28,34 +28,35 @@ router.get('/:professionalId', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  try {
-    // const { title, description, tasks } = req.body;
+  // try {
+  //   // const { title, description, tasks } = req.body;
 
-    if(req.files && req.files.foto){
-      let avatar = req.files.foto;
-      avatar.mv('./uploads/professional/' + avatar.name);
+  //   if(req.files && req.files.foto){
+  //     let avatar = req.files.foto;
+  //     avatar.mv('./uploads/professional/' + avatar.name);
   
-      req.body.foto = avatar.name
-    }
+  //     req.body.foto = avatar.name
+  //   }
 
-    const professional = await Professional.create({ ...req.body, user: req.userId });
+  //   const professional = await Professional.create({ ...req.body, user: req.userId });
 
-    // await Promise.all(tasks.map(async task => {
-    //   const projectTask = new Task({ ...task, project: project._id });
+  //   // await Promise.all(tasks.map(async task => {
+  //   //   const projectTask = new Task({ ...task, project: project._id });
 
-    //   await projectTask.save();
+  //   //   await projectTask.save();
 
-    //   project.tasks.push(projectTask);
-    // }));
+  //   //   project.tasks.push(projectTask);
+  //   // }));
 
     
 
-    await professional.save();
+  //   await professional.save();
 
-    return res.send({ professional });
-  } catch (err) {
-    return res.status(400).send({ error: 'Error creating new professional' });
-  }
+  //   return res.send({ professional });
+  // } catch (err) {
+  //   return res.status(400).send({ error: 'Error creating new professional' });
+  // }
+  
 });
 
 router.put('/:professionalId', async (req, res) => {
