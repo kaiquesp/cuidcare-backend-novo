@@ -86,20 +86,43 @@ router.post('/', async (req, res) => {
 
 router.put('/:professionalId', async (req, res) => {
   try {
-    // const { title, description, tasks } = req.body;
+    if (req.files && req.files.foto) {
+      let avatar
+      if(req.files.foto){
+        avatar = req.files.foto;
+        avatar.mv('./uploads/professionals/' + req.body.cpf + '/foto/' + avatar.name);
+      }
+      req.body.foto = avatar.name
+    }
 
+    if(req.files && req.files.curriculoAnexo){
+      let curriculo
+      if(req.files.curriculoAnexo){
+        curriculo = req.files.curriculoAnexo
+        curriculo.mv('./uploads/professionals/' + req.body.cpf + '/curriculo/' + curriculo.name);
+      }
+      req.body.curriculoAnexo = curriculo.name
+    }
+
+    if(req.files && req.files.certificadoAnexo){
+      let certificado
+      if(req.files.certificadoAnexo){
+        certificado = req.files.certificadoAnexo
+        certificado.mv('./uploads/professionals/' + req.body.cpf + '/certificado/' + certificado.name);
+      }
+      req.body.certificadoAnexo = certificado.name
+    }
+
+    if(req.files && req.files.cartaRecomendacaoAnexo){
+      let cartaRecomendacao
+      if(req.files.cartaRecomendacaoAnexo){
+        cartaRecomendacao = req.files.cartaRecomendacaoAnexo
+        cartaRecomendacao.mv('./uploads/professionals/' + req.body.cpf + '/carta-recomendacao/' + cartaRecomendacao.name);
+      }
+      req.body.cartaRecomendacaoAnexo = cartaRecomendacao.name
+    }
+    
     const professional = await Professional.findByIdAndUpdate(req.params.professionalId, req.body, { new: true });
-
-    // project.tasks = [];
-    // await Task.remove({ project: project._id });
-
-    // await Promise.all(tasks.map(async task => {
-    //   const projectTask = new Task({ ...task, project: project._id });
-
-    //   await projectTask.save();
-
-    //   project.tasks.push(projectTask);
-    // }));
 
     await professional.save();
 
