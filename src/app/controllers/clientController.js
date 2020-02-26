@@ -2,7 +2,6 @@ const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 
 const Client = require('../models/client');
-const multipart = require('connect-multiparty');
 
 const router = express.Router();
 
@@ -36,24 +35,13 @@ router.get('/:clientId', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    // const { title, description, tasks } = req.body;
-
-    let avatar = req.files.foto;
-
-    //Use the mv() method to place the file in upload directory (i.e. "uploads")
-    avatar.mv('./uploads/client/' + avatar.name);
-
-    req.body.foto = avatar.name
+    if(req.files && req.files.foto){
+      let avatar = req.files.foto;
+      avatar.mv('./uploads/clients/'+ req.body.cpf + '/' + avatar.name);
+      req.body.foto = avatar.name
+    }
 
     const client = await Client.create({ ...req.body, user: req.userId });
-
-    // await Promise.all(tasks.map(async task => {
-    //   const projectTask = new Task({ ...task, project: project._id });
-
-    //   await projectTask.save();
-
-    //   project.tasks.push(projectTask);
-    // }));
 
     await client.save();
 
@@ -63,8 +51,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-const multipartMiddleware = multipart({ uploadDir: './uploads' });
-router.post('/upload', multipartMiddleware, (req, res) => {
+// const multipartMiddleware = multipart({ uploadDir: './uploads' });
+router.post('/upload', (req, res) => {
   const files = req.files;
   console.log(files);
   res.json({ message: files });

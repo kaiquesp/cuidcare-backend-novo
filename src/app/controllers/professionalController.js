@@ -28,35 +28,29 @@ router.get('/:professionalId', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  // try {
-  //   // const { title, description, tasks } = req.body;
+  try {
+    if (req.files && req.files.foto || req.files.curriculoAnexo || req.files.certificadoAnexo || req.files.cartaRecomendacaoAnexo) {
+      let avatar = req.files.foto;
+      let curriculo = req.files.curriculoAnexo;
+      let certificado = req.files.certificadoAnexo;
+      let cartaRecomendacao = req.files.cartaRecomendacaoAnexo;
+      avatar.mv('./uploads/professionals/' + req.body.cpf + '/' + avatar.name);
 
-  //   if(req.files && req.files.foto){
-  //     let avatar = req.files.foto;
-  //     avatar.mv('./uploads/professional/' + avatar.name);
-  
-  //     req.body.foto = avatar.name
-  //   }
+      req.body.foto = avatar.name
+      req.body.curriculoAnexo = curriculo.name
+      req.body.certificadoAnexo = certificado.name
+      req.body.cartaRecomendacaoAnexo = cartaRecomendacao.name
+    }
 
-  //   const professional = await Professional.create({ ...req.body, user: req.userId });
+    const professional = await Professional.create({ ...req.body, user: req.userId });
 
-  //   // await Promise.all(tasks.map(async task => {
-  //   //   const projectTask = new Task({ ...task, project: project._id });
+    await professional.save();
 
-  //   //   await projectTask.save();
+    return res.send({ professional });
+  } catch (err) {
+    return res.status(400).send({ error: 'Error creating new professional' });
+  }
 
-  //   //   project.tasks.push(projectTask);
-  //   // }));
-
-    
-
-  //   await professional.save();
-
-  //   return res.send({ professional });
-  // } catch (err) {
-  //   return res.status(400).send({ error: 'Error creating new professional' });
-  // }
-  
 });
 
 router.put('/:professionalId', async (req, res) => {
