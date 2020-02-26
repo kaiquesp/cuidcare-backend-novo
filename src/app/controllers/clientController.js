@@ -60,20 +60,16 @@ router.post('/upload', (req, res) => {
 
 router.put('/:clientId', async (req, res) => {
   try {
-    // const { title, description, tasks } = req.body;
+    if (req.files && req.files.foto) {
+      let avatar
+      if(req.files.foto){
+        avatar = req.files.foto;
+        avatar.mv('./uploads/clients/' + req.body.cpf + '/foto/' + avatar.name);
+      }
+      req.body.foto = avatar.name
+    }
 
     const client = await Client.findByIdAndUpdate(req.params.clientId, req.body, { new: true });
-
-    // project.tasks = [];
-    // await Task.remove({ project: project._id });
-
-    // await Promise.all(tasks.map(async task => {
-    //   const projectTask = new Task({ ...task, project: project._id });
-
-    //   await projectTask.save();
-
-    //   project.tasks.push(projectTask);
-    // }));
 
     await client.save();
 
