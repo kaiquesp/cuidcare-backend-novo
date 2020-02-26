@@ -29,21 +29,52 @@ router.get('/:professionalId', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    if (req.files && req.files.foto || req.files.curriculoAnexo || req.files.certificadoAnexo || req.files.cartaRecomendacaoAnexo) {
-      let avatar = req.files.foto;
-      let curriculo = req.files.curriculoAnexo;
-      let certificado = req.files.certificadoAnexo;
-      let cartaRecomendacao = req.files.cartaRecomendacaoAnexo;
-      avatar.mv('./uploads/professionals/' + req.body.cpf + '/' + avatar.name);
-
+    let professional;
+    if (req.files && req.files.foto) {
+      let avatar
+      if(req.files.foto){
+        avatar = req.files.foto;
+        avatar.mv('./uploads/professionals/' + req.body.cpf + '/foto/' + avatar.name);
+      }
       req.body.foto = avatar.name
-      req.body.curriculoAnexo = curriculo.name
-      req.body.certificadoAnexo = certificado.name
-      req.body.cartaRecomendacaoAnexo = cartaRecomendacao.name
+    }else{
+      req.body.foto = ''
     }
 
-    const professional = await Professional.create({ ...req.body, user: req.userId });
+    if(req.files && req.files.curriculoAnexo){
+      let curriculo
+      if(req.files.curriculoAnexo){
+        curriculo = req.files.curriculoAnexo
+        avatar.mv('./uploads/professionals/' + req.body.cpf + '/curriculo' + curriculo.name);
+      }
+      req.body.curriculoAnexo = curriculo.name
+    }else{
+      req.body.curriculoAnexo = ''
+    }
 
+    if(req.files && req.files.certificadoAnexo){
+      let certificado
+      if(req.files.certificadoAnexo){
+        certificado = req.files.certificadoAnexo
+        avatar.mv('./uploads/professionals/' + req.body.cpf + '/certificado/' + certificado.name);
+      }
+      req.body.certificadoAnexo = certificado.name
+    }else{
+      req.body.certificadoAnexo = ''
+    }
+
+    if(req.files && req.files.cartaRecomendacaoAnexo){
+      let cartaRecomendacao
+      if(req.files.cartaRecomendacaoAnexo){
+        cartaRecomendacao = req.files.cartaRecomendacaoAnexo
+        avatar.mv('./uploads/professionals/' + req.body.cpf + '/carta-recomendacao/' + cartaRecomendacao.name);
+      }
+      req.body.cartaRecomendacaoAnexo = cartaRecomendacao.name
+    }else{
+      req.body.cartaRecomendacaoAnexo = ''
+    }
+
+    professional = await Professional.create({ ...req.body, user: req.userId });
     await professional.save();
 
     return res.send({ professional });
@@ -51,7 +82,7 @@ router.post('/', async (req, res) => {
     return res.status(400).send({ error: 'Error creating new professional' });
   }
 
-});
+}); 
 
 router.put('/:professionalId', async (req, res) => {
   try {

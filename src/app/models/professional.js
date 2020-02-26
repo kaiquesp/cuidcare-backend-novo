@@ -13,7 +13,7 @@ const ProfessionalSchema = new mongoose.Schema({
 	habilitacaoVeiculo: {type: String, required: false},
 	especialidade: {type: String, required: false},
 	certificacao: {type: String, required: false},
-	telefone: {type: String, required: false},
+	celular: {type: String, required: false},
 	experienciaCuidadorIdosos: {type: String, required: false},
 	trabalhaAtualmente: {type: String, required: false},
 	sobre: {type: String, required: false},
