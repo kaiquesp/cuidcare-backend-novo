@@ -23,46 +23,46 @@ router.post('/register',[
   const { email, cpf } = req.body;
 
   try {
-    // if (await User.findOne({ email })){ 
-    //   return res.status(400).send({ error: 'E-mail já cadastrado' });
-    // }else if(!req.body.email || req.body.email.length === 0){
-    //   return res.status(400).send({
-    //     error: 'E-mail não pode estar vazio'
-    //   })
-    //   return;
-    // }
+    if (await User.findOne({ email })){ 
+      return res.status(400).send({ error: 'E-mail já cadastrado' });
+    }else if(!req.body.email || req.body.email.length === 0){
+      return res.status(400).send({
+        error: 'E-mail não pode estar vazio'
+      })
+      return;
+    }
 
-    // if (!req.body.nome || req.body.nome.length === 0){
-    //   return res.status(400).send({
-    //     error: 'Nome não pode estar vazio'
-    //   })
-    //   return;
-    // }
+    if (!req.body.nome || req.body.nome.length === 0){
+      return res.status(400).send({
+        error: 'Nome não pode estar vazio'
+      })
+      return;
+    }
 
-    // if (await User.findOne({ cpf })){ 
-    //   return res.status(400).send({ error: 'CPF já cadastrado' });
-    // }else if(!req.body.cpf || req.body.cpf.length === 0) {
-    //   return res.status(400).send({
-    //     error: 'CPF não pode estar vazio'
-    //   })
-    //   return;
-    // }
+    if (await User.findOne({ cpf })){ 
+      return res.status(400).send({ error: 'CPF já cadastrado' });
+    }else if(!req.body.cpf || req.body.cpf.length === 0) {
+      return res.status(400).send({
+        error: 'CPF não pode estar vazio'
+      })
+      return;
+    }
 
-    // if (!req.body.celular || req.body.celular.length === 0){
-    //   return res.status(400).send({
-    //     error: 'Celular não pode estar vazio'
-    //   })
+    if (!req.body.celular || req.body.celular.length === 0){
+      return res.status(400).send({
+        error: 'Celular não pode estar vazio'
+      })
 
-    //   return;
-    // }
+      return;
+    }
 
-    // if (req.body.password.length === 0){
-    //   return res.status(400).send({
-    //     error: 'Senha não pode estar vazio'
-    //   })
+    if (req.body.password.length === 0){
+      return res.status(400).send({
+        error: 'Senha não pode estar vazio'
+      })
 
-    //   return;
-    // }
+      return;
+    }
 
     check('email').custom(value => {
       return User.findOne(value).then(user => {
